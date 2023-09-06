@@ -2,6 +2,7 @@
 #include "overlay.h"
 #include "driver.h"
 #include "time.h"
+#include "vector.h"
 
 namespace OverlayWindow
 {
@@ -101,43 +102,45 @@ typedef struct _EntityList
 	int actor_id;
 }EntityList;
 std::vector<EntityList> entityList;
+std::vector<EntityList> itemEntityList;
 
 auto CallHacks() -> VOID
 {
-	auto CachedCurrentWeapon = read<uint64_t>(GameVars.local_player_pawn + GameOffset.offset_CachedCurrentWeapon); // struct ASolarPlayerWeapon* CachedCurrentWeapon; // 0x1a18(0x08)
-	auto RecoilComponent = read<uint64_t>(CachedCurrentWeapon + GameOffset.offset_RecoilComponent); // struct UWeaponRecoilComponent* RecoilComponent; // 0x598(0x08)
-	auto USingleWeaponConfig = read<uint64_t>(CachedCurrentWeapon + GameOffset.offset_USingleWeaponConfig); // 	struct USingleWeaponConfig* ; //
-	auto UWeaponShootConfig = read<uint64_t>(USingleWeaponConfig + GameOffset.offset_UWeaponShootConfig); // 	struct UWeaponShootConfig
-	auto WeaponConfig = read<uint64_t>(RecoilComponent + GameOffset.offset_WeaponConfig); //possibly WeaponFireModeType;   WeaponAbilityTag; or 	struct FGameplayTag WeaponAbilityTag; // 0xd8(0x08)
-	auto primaryammo = read<uint64_t>(USingleWeaponConfig + GameOffset.offset_primaryammo); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
-	auto secondaryammo = read<uint64_t>(USingleWeaponConfig + GameOffset.offset_secondaryammo); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
-	auto secondaryupdateammo = read<uint64_t>(USingleWeaponConfig + GameOffset.offset_secondaryupdateammo); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
-	auto FAmmonRecoilScope = read<uint64_t>(primaryammo + GameOffset.offset_FAmmonRecoilScope); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
-	auto FAmmonRecoilRollStruct = read<uint64_t>(primaryammo + GameOffset.offset_FAmmonRecoilRollStruct); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
-	auto FAmmonRecoilScope2 = read<uint64_t>(secondaryammo + GameOffset.offset_FAmmonRecoilScope2); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
-	auto FAmmonRecoilRollStruct2 = read<uint64_t>(secondaryammo + GameOffset.offset_FAmmonRecoilRollStruct2); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
-	auto FAmmonRecoilScope3 = read<uint64_t>(secondaryupdateammo + GameOffset.offset_FAmmonRecoilScope3); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
-	auto FAmmonRecoilRollStruct3 = read<uint64_t>(secondaryupdateammo + GameOffset.offset_FAmmonRecoilRollStruct3); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08) // HorizontalCurve
 	while (true)
 	{
+		auto CachedCurrentWeapon = read<uint64_t>(GameVars.local_player_pawn + GameOffset.offset_CachedCurrentWeapon); // struct ASolarPlayerWeapon* CachedCurrentWeapon; // 0x1a18(0x08)
+		auto RecoilComponent = read<uint64_t>(CachedCurrentWeapon + GameOffset.offset_RecoilComponent); // struct UWeaponRecoilComponent* RecoilComponent; // 0x598(0x08)
+		auto USingleWeaponConfig = read<uint64_t>(CachedCurrentWeapon + GameOffset.offset_USingleWeaponConfig); // 	struct USingleWeaponConfig* ; //
+		auto UWeaponShootConfig = read<uint64_t>(USingleWeaponConfig + GameOffset.offset_UWeaponShootConfig); // 	struct UWeaponShootConfig
+		auto WeaponConfig = read<uint64_t>(RecoilComponent + GameOffset.offset_WeaponConfig); //possibly WeaponFireModeType;   WeaponAbilityTag; or 	struct FGameplayTag WeaponAbilityTag; // 0xd8(0x08)
+		auto primaryammo = read<uint64_t>(USingleWeaponConfig + GameOffset.offset_primaryammo); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
+		auto secondaryammo = read<uint64_t>(USingleWeaponConfig + GameOffset.offset_secondaryammo); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
+		auto secondaryupdateammo = read<uint64_t>(USingleWeaponConfig + GameOffset.offset_secondaryupdateammo); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
+		auto FAmmonRecoilScope = read<uint64_t>(primaryammo + GameOffset.offset_FAmmonRecoilScope); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
+		auto FAmmonRecoilRollStruct = read<uint64_t>(primaryammo + GameOffset.offset_FAmmonRecoilRollStruct); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
+		auto FAmmonRecoilScope2 = read<uint64_t>(secondaryammo + GameOffset.offset_FAmmonRecoilScope2); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
+		auto FAmmonRecoilRollStruct2 = read<uint64_t>(secondaryammo + GameOffset.offset_FAmmonRecoilRollStruct2); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
+		auto FAmmonRecoilScope3 = read<uint64_t>(secondaryupdateammo + GameOffset.offset_FAmmonRecoilScope3); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08)
+		auto FAmmonRecoilRollStruct3 = read<uint64_t>(secondaryupdateammo + GameOffset.offset_FAmmonRecoilRollStruct3); // struct UAmmoConfig* PrimaryAmmo; // 0x2d8(0x08) // HorizontalCurve
 		if (CFG.b_NoRecoil)
 		{
-			write<bool>(primaryammo + 0x03E0, false); //FAmmonRecoilScope EnableScopeVibration
-			write<bool>(primaryammo + 0x03E1, false); //FAmmonRecoilScope EnableCrossHairVibration
-			write<bool>(primaryammo + 0x03E2, false); //FAmmonRecoilScope EnableScopeRoll
-			write<float>(primaryammo + 0x0498, 0.0f); // float ADSRecoilCOP; // 0x0498   (0x0004)
-			write<float>(primaryammo + 0x0224, 0.0f);  // float  ADSSpreadCOP;   // 0x0224   (0x0004)
+			write<bool>(primaryammo + 0x03E0 + 0x0, false); //FAmmonRecoilScope EnableScopeVibration
+			write<bool>(primaryammo + 0x03E0 + 0x1, false); //FAmmonRecoilScope EnableCrossHairVibration
+			write<bool>(primaryammo + 0x03E0 + 0x2, false); //FAmmonRecoilScope EnableScopeRoll
+			write<float>(primaryammo + 0x498, 0.0f); // float ADSRecoilCOP; // 0x0498   (0x0004)
+			write<float>(primaryammo + 0x03E0, 0.0f);  // float  ADSSpreadCOP;   // 0x0224   (0x0004)
 
 			write<float>(primaryammo + 0x0224, 0.0f);  // float  ADSSpreadCOP;   // 0x0224   (0x0004)
 
-			write<bool>(secondaryammo + 0x03E0, false); // EnableScopeVibration
-			write<bool>(secondaryammo + 0x03E1, false); // EnableCrossHairVibration
-			write<bool>(secondaryammo + 0x03E2, false); // EnableScopeRoll
+			write<bool>(secondaryammo + 0x03E0 + 0x0, false); // EnableScopeVibration
+			write<bool>(secondaryammo + 0x03E0 + 0x1, false); // EnableCrossHairVibration
+			write<bool>(secondaryammo + 0x03E0 + 0x2, false); // EnableScopeRoll
 			write<bool>(secondaryammo + 0x0224, false); // float  ADSSpreadCOP;   // 0x0224   (0x0004)
 			write<float>(secondaryammo + 0x0498, 0.0f); //float ADSRecoilCOP; // 0x0498   (0x0004)
 			write<bool>(RecoilComponent + 0x00C0, false); //UWeaponRecoilComponent
 			write<bool>(RecoilComponent + 0x00C1, false); //UWeaponRecoilComponent
 			write<bool>(RecoilComponent + 0x00C2, false); //UWeaponRecoilComponent
+			write<bool>(UWeaponShootConfig + 0x0031, false); //bEnableNewRecoil;  // 0x0033   (0x0001)
 		}
 		if (CFG.b_NoSpread)
 		{
@@ -155,7 +158,6 @@ auto CallHacks() -> VOID
 			write<float>(USingleWeaponConfig + 0x011C, -9.9999f); //float VhADSBaseSpread; // 0xf8(0x04)
 
 			write<bool>(UWeaponShootConfig + 0x0030, false); //bEnableNewSpread;  // 0x0033   (0x0001)
-			write<bool>(UWeaponShootConfig + 0x0031, false); //bEnableNewRecoil;  // 0x0033   (0x0001)
 			write<bool>(UWeaponShootConfig + 0x0032, false); //bEnableNewWeaponAnim;  // 0x0033   (0x0001)
 			write<bool>(UWeaponShootConfig + 0x0033, false); //bEnableNewCameraShake;  // 0x0033   (0x0001)
 			write<float>(UWeaponShootConfig + 0x0098, -9.9999f); //float BaseSpread; // 0xf8(0x04)
@@ -205,11 +207,97 @@ auto CallAimbot() -> VOID
 				if (SolarTeamIfo == MyTeamInfo)
 					continue;
 
-				auto head_pos = GetBoneWithRotation(Entity.actor_mesh, bones::head);
-				auto targethead = ProjectWorldToScreen(Vector3(head_pos.x, head_pos.y, head_pos.z));
+				Vector3 aimingLocationPos = Vector3();
+				Vector3 head_pos = GetBoneWithRotation(Entity.actor_mesh, bones::head);
+				Vector3 neck_pos = GetBoneWithRotation(Entity.actor_mesh, bones::neck_01);
+				Vector3 body_pos = GetBoneWithRotation(Entity.actor_mesh, bones::spine_03);
+				Vector3 pelvis_pos = GetBoneWithRotation(Entity.actor_mesh, bones::pelvis);
+				Vector3 thighr_pos = GetBoneWithRotation(Entity.actor_mesh, bones::thigh_r);
+				Vector3 thighl_pos = GetBoneWithRotation(Entity.actor_mesh, bones::thigh_l);
+				Vector3 calfr_pos = GetBoneWithRotation(Entity.actor_mesh, bones::calf_r);
+				Vector3 calfl_pos = GetBoneWithRotation(Entity.actor_mesh, bones::calf_l);
+				Vector3 upperarmr_pos = GetBoneWithRotation(Entity.actor_mesh, bones::upperarm_r);
+				Vector3 upperarml_pos = GetBoneWithRotation(Entity.actor_mesh, bones::upperarm_l);
+				Vector3 lowerarmr_pos = GetBoneWithRotation(Entity.actor_mesh, bones::lowerarm_r);
+				Vector3 lowerarml_pos = GetBoneWithRotation(Entity.actor_mesh, bones::lowerarm_l);
+				Vector3 handr_pos = GetBoneWithRotation(Entity.actor_mesh, bones::hand_r);
+				Vector3 handl_pos = GetBoneWithRotation(Entity.actor_mesh, bones::hand_l);
+				Vector3 footr_pos = GetBoneWithRotation(Entity.actor_mesh, bones::foot_r);
+				Vector3 footl_pos = GetBoneWithRotation(Entity.actor_mesh, bones::foot_l);
 
-				float x = targethead.x - GameVars.ScreenWidth / 2.0f;
-				float y = targethead.y - GameVars.ScreenHeight / 2.0f;
+				switch (CFG.aimLocation)
+				{
+				case 0: // Head
+					aimingLocationPos = ProjectWorldToScreen(Vector3(head_pos.x, head_pos.y, head_pos.z));
+					break;
+
+				case 1: // Neck
+					aimingLocationPos = ProjectWorldToScreen(Vector3(neck_pos.x, neck_pos.y, neck_pos.z));
+					break;
+
+				case 2: // Body
+					aimingLocationPos = ProjectWorldToScreen(Vector3(body_pos.x, body_pos.y, body_pos.z));
+					break;
+
+				case 3: // Pelvis
+					aimingLocationPos = ProjectWorldToScreen(Vector3(pelvis_pos.x, pelvis_pos.y, pelvis_pos.z));
+					break;
+
+				case 4: // thigh r
+					aimingLocationPos = ProjectWorldToScreen(Vector3(thighr_pos.x, thighr_pos.y, thighr_pos.z));
+					break;
+
+				case 5: // thigh l
+					aimingLocationPos = ProjectWorldToScreen(Vector3(thighl_pos.x, thighl_pos.y, thighl_pos.z));
+					break;
+
+				case 6: // calf r
+					aimingLocationPos = ProjectWorldToScreen(Vector3(calfr_pos.x, calfr_pos.y, calfr_pos.z));
+					break;
+
+				case 7: // calf l
+					aimingLocationPos = ProjectWorldToScreen(Vector3(calfl_pos.x, calfl_pos.y, calfl_pos.z));
+					break;
+
+				case 8: // upperarm r
+					aimingLocationPos = ProjectWorldToScreen(Vector3(upperarmr_pos.x, upperarmr_pos.y, upperarmr_pos.z));
+					break;
+
+				case 9: // upperarm l
+					aimingLocationPos = ProjectWorldToScreen(Vector3(upperarml_pos.x, upperarml_pos.y, upperarml_pos.z));
+					break;
+
+				case 10: // Lowerarm r
+					aimingLocationPos = ProjectWorldToScreen(Vector3(lowerarmr_pos.x, lowerarmr_pos.y, lowerarmr_pos.z));
+					break;
+
+				case 11: // Lowerarm l
+					aimingLocationPos = ProjectWorldToScreen(Vector3(lowerarml_pos.x, lowerarml_pos.y, lowerarml_pos.z));
+					break;
+
+				case 12: // hand r
+					aimingLocationPos = ProjectWorldToScreen(Vector3(handr_pos.x, handr_pos.y, handr_pos.z));
+					break;
+
+				case 13: // hand l
+					aimingLocationPos = ProjectWorldToScreen(Vector3(handl_pos.x, handl_pos.y, handl_pos.z));
+					break;
+
+				case 14: // Foot r
+					aimingLocationPos = ProjectWorldToScreen(Vector3(footr_pos.x, footr_pos.y, footr_pos.z));
+					break;
+
+				case 15: // Foot l
+					aimingLocationPos = ProjectWorldToScreen(Vector3(footl_pos.x, footl_pos.y, footl_pos.z));
+					break;
+
+				default:
+					aimingLocationPos = ProjectWorldToScreen(Vector3(neck_pos.x, neck_pos.y, neck_pos.z));
+					break;
+				}
+
+				float x = aimingLocationPos.x - GameVars.ScreenWidth / 2.0f;
+				float y = aimingLocationPos.y - GameVars.ScreenHeight / 2.0f;
 				float crosshair_dist = sqrtf((x * x) + (y * y));
 
 				if (crosshair_dist <= FLT_MAX && crosshair_dist <= target_dist)
@@ -227,9 +315,96 @@ auto CallAimbot() -> VOID
 				if (target_entity.actor_pawn == GameVars.local_player_pawn)
 					continue;
 
-				auto head_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::head);
-				auto targethead = ProjectWorldToScreen(Vector3(head_pos.x, head_pos.y, head_pos.z));
-				move_to(targethead.x, targethead.y);
+				Vector3 aimingLocationPos = Vector3();
+				Vector3 head_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::head);
+				Vector3 neck_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::neck_01);
+				Vector3 body_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::spine_03);
+				Vector3 pelvis_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::pelvis);
+				Vector3 thighr_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::thigh_r);
+				Vector3 thighl_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::thigh_l);
+				Vector3 calfr_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::calf_r);
+				Vector3 calfl_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::calf_l);
+				Vector3 upperarmr_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::upperarm_r);
+				Vector3 upperarml_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::upperarm_l);
+				Vector3 lowerarmr_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::lowerarm_r);
+				Vector3 lowerarml_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::lowerarm_l);
+				Vector3 handr_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::hand_r);
+				Vector3 handl_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::hand_l);
+				Vector3 footr_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::foot_r);
+				Vector3 footl_pos = GetBoneWithRotation(target_entity.actor_mesh, bones::foot_l);
+
+				switch (CFG.aimLocation)
+				{
+				case 0: // Head
+					aimingLocationPos = ProjectWorldToScreen(Vector3(head_pos.x, head_pos.y, head_pos.z));
+					break;
+
+				case 1: // Neck
+					aimingLocationPos = ProjectWorldToScreen(Vector3(neck_pos.x, neck_pos.y, neck_pos.z));
+					break;
+
+				case 2: // Body
+					aimingLocationPos = ProjectWorldToScreen(Vector3(body_pos.x, body_pos.y, body_pos.z));
+					break;
+
+				case 3: // Pelvis
+					aimingLocationPos = ProjectWorldToScreen(Vector3(pelvis_pos.x, pelvis_pos.y, pelvis_pos.z));
+					break;
+
+				case 4: // thigh r
+					aimingLocationPos = ProjectWorldToScreen(Vector3(thighr_pos.x, thighr_pos.y, thighr_pos.z));
+					break;
+
+				case 5: // thigh l
+					aimingLocationPos = ProjectWorldToScreen(Vector3(thighl_pos.x, thighl_pos.y, thighl_pos.z));
+					break;
+
+				case 6: // calf r
+					aimingLocationPos = ProjectWorldToScreen(Vector3(calfr_pos.x, calfr_pos.y, calfr_pos.z));
+					break;
+
+				case 7: // calf l
+					aimingLocationPos = ProjectWorldToScreen(Vector3(calfl_pos.x, calfl_pos.y, calfl_pos.z));
+					break;
+
+				case 8: // upperarm r
+					aimingLocationPos = ProjectWorldToScreen(Vector3(upperarmr_pos.x, upperarmr_pos.y, upperarmr_pos.z));
+					break;
+
+				case 9: // upperarm l
+					aimingLocationPos = ProjectWorldToScreen(Vector3(upperarml_pos.x, upperarml_pos.y, upperarml_pos.z));
+					break;
+
+				case 10: // Lowerarm r
+					aimingLocationPos = ProjectWorldToScreen(Vector3(lowerarmr_pos.x, lowerarmr_pos.y, lowerarmr_pos.z));
+					break;
+
+				case 11: // Lowerarm l
+					aimingLocationPos = ProjectWorldToScreen(Vector3(lowerarml_pos.x, lowerarml_pos.y, lowerarml_pos.z));
+					break;
+
+				case 12: // hand r
+					aimingLocationPos = ProjectWorldToScreen(Vector3(handr_pos.x, handr_pos.y, handr_pos.z));
+					break;
+
+				case 13: // hand l
+					aimingLocationPos = ProjectWorldToScreen(Vector3(handl_pos.x, handl_pos.y, handl_pos.z));
+					break;
+
+				case 14: // Foot r
+					aimingLocationPos = ProjectWorldToScreen(Vector3(footr_pos.x, footr_pos.y, footr_pos.z));
+					break;
+
+				case 15: // Foot l
+					aimingLocationPos = ProjectWorldToScreen(Vector3(footl_pos.x, footl_pos.y, footl_pos.z));
+					break;
+
+				default:
+					aimingLocationPos = ProjectWorldToScreen(Vector3(neck_pos.x, neck_pos.y, neck_pos.z));
+					break;
+				}
+
+				move_to(aimingLocationPos.x, aimingLocationPos.y);
 			}
 		}
 		Sleep(1);
@@ -240,6 +415,7 @@ auto GameCache() -> VOID
 	while (true)
 	{
 		std::vector<EntityList> tmpList;
+		std::vector<EntityList> tmpItemList;
 
 		GameVars.u_world = read<DWORD_PTR>(GameVars.dwProcess_Base + GameOffset.offset_u_world);
 		GameVars.game_instance = read<DWORD_PTR>(GameVars.u_world + GameOffset.offset_game_instance);
@@ -276,9 +452,22 @@ auto GameCache() -> VOID
 			auto actor_id = read<int>(actor_pawn + GameOffset.offset_actor_id);
 			auto actor_mesh = read<uintptr_t>(actor_pawn + GameOffset.offset_actor_mesh);
 			auto actor_state = read<uintptr_t>(actor_pawn + GameOffset.offset_player_state);
-			auto name = GetNameFromFName(actor_id);
+			string name = GetNameFromFName(actor_id);
 
 			//printf("\n: %s", name.c_str());
+
+			if (name.find("SolarItemActor") != std::string::npos || name.find("SolarGroundPreviewActor") != std::string::npos)
+			{
+				if (actor_pawn != NULL || actor_id != NULL || actor_state != NULL || actor_mesh != NULL)
+				{
+					EntityList Entity{ };
+					Entity.actor_pawn = actor_pawn;
+					Entity.actor_id = actor_id;
+					Entity.actor_state = actor_state;
+					Entity.actor_mesh = actor_mesh;
+					tmpItemList.push_back(Entity);
+				}
+			}
 
 			if (name.find("BP_Character") != std::string::npos)
 			{
@@ -294,12 +483,91 @@ auto GameCache() -> VOID
 			}
 		}
 		entityList = tmpList;
+		itemEntityList = tmpItemList;
 	}
 	Sleep(10);
 }
 auto RenderVisual() -> VOID
 {
 	auto EntityList_Copy = entityList;
+	auto itemEntityList_Copy = itemEntityList;
+
+	for (int index = 0; index < itemEntityList_Copy.size(); ++index)
+	{
+		auto Entity = itemEntityList_Copy[index];
+
+		auto local_pos = read<Vector3>(GameVars.local_player_root + GameOffset.offset_relative_location);
+		auto pawn_root = read<DWORD_PTR>(Entity.actor_pawn + GameOffset.offset_root_component);
+		auto pawn_location = read<Vector3>(pawn_root + GameOffset.offset_relative_location);
+		auto entity_distance = local_pos.Distance(pawn_location);
+
+		if (CFG.b_Visual && entity_distance < CFG.max_distance)
+		{
+			if (CFG.b_EspItem)
+			{
+				auto itemID = read<uint32_t>((uintptr_t)(Entity.actor_pawn) + GameOffset.offset_ItemData + GameOffset.offset_ItemID);
+				auto itemName = read<FString>((uintptr_t)(Entity.actor_pawn) + GameOffset.offset_ItemData + GameOffset.offset_ItemName);
+				auto itemQuality = read<uint32_t>((uintptr_t)(Entity.actor_pawn) + GameOffset.offset_ItemData + GameOffset.offset_ItemQuality);
+				string itemNameStr = itemName.ToString();
+
+				auto itemPosScreen = ProjectWorldToScreen(Vector3(pawn_location.x, pawn_location.y, pawn_location.z));
+
+				ImColor colorQuality = ImColor(255, 255, 255);
+				switch (itemQuality)
+				{
+				case 1:
+					colorQuality = ImColor(255, 255, 255);
+					break;
+				case 2:
+					colorQuality = ImColor(0, 168, 6);
+					break;
+				case 3:
+					colorQuality = ImColor(32, 41, 201);
+					break;
+				case 4:
+					colorQuality = ImColor(201, 0, 212);
+					break;
+				case 5:
+					colorQuality = ImColor(222, 122, 0);
+					break;
+				case 6:
+					colorQuality = ImColor(200, 0, 0);
+					break;
+				default:
+					break;
+				}
+
+				string strToDrawItem = "";
+
+				if (IsWeaponAR(itemID))
+				{
+					strToDrawItem += "[AR] " + itemNameStr;
+				}
+				else if (IsWeaponSMG(itemID))
+				{
+					strToDrawItem += "[SMG] " + itemNameStr;
+				}
+				else if (IsWeaponSNP(itemID))
+				{
+					strToDrawItem += "[SNP] " + itemNameStr;
+				}
+				else if (IsWeaponSpecial(itemID))
+				{
+					strToDrawItem += "[SP] " + itemNameStr;
+				}
+				else if (IsWeaponSHG(itemID))
+				{
+					strToDrawItem += "[SHG] " + itemNameStr;
+				}
+				else
+				{
+					strToDrawItem += itemNameStr;
+				}
+
+				DrawOutlinedText(Verdana, strToDrawItem, ImVec2(itemPosScreen.x, itemPosScreen.y), 16.0f, colorQuality, true);
+			}
+		}
+	}
 
 	for (int index = 0; index < EntityList_Copy.size(); ++index)
 	{
@@ -536,14 +804,15 @@ void Render()
 	if (CFG.b_MenuShow)
 	{
 		InputHandler();
-		ImGui::SetNextWindowSize(ImVec2(675, 460));
+		ImGui::SetNextWindowSize(ImVec2(675, 530));
 		ImGui::PushFont(DefaultFont);
-		ImGui::Begin("Farlight 84 | FlagsHacks | updated by bnt & TheGeogeo", 0, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
+		ImGui::Begin("Farlight 84", 0, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
 
 		TabButton("Visuals", &CFG.tab_index, 0, true);
 		TabButton("Aimbot", &CFG.tab_index, 1, true);
 		TabButton("Misc", &CFG.tab_index, 2, true);
 		TabButton("Config", &CFG.tab_index, 3, true);
+		TabButton("Credit", &CFG.tab_index, 4, true);
 
 		ImGui::Separator();
 
@@ -560,6 +829,7 @@ void Render()
 				ImGui::Checkbox("Health ESP", &CFG.b_EspHealth);
 				ImGui::Checkbox("Armor ESP", &CFG.b_EspShield);
 				ImGui::Checkbox("Team ESP", &CFG.b_EspTeam);
+				ImGui::Checkbox("Item ESP", &CFG.b_EspItem);
 				ImGui::SliderFloat("Max Distance", &CFG.max_distance, 1.0f, 1000.0f);
 				if (ImGui::ColorEdit3("Visible Color", CFG.fl_VisibleColor, ImGuiColorEditFlags_NoDragDrop))
 				{
@@ -591,16 +861,17 @@ void Render()
 			ImGui::Combo("Aim Key 2", &CFG.AimKey[1], keyItems, IM_ARRAYSIZE(keyItems));
 
 			ImGui::SliderFloat("Smoothing", &CFG.Smoothing, 1.0f, 10.0f);
+			ImGui::Combo("Aim location", &CFG.aimLocation, CFG.aimLocations, IM_ARRAYSIZE(CFG.aimLocations));
 		}
 		else if (CFG.tab_index == 2)
 		{
-			ImGui::Checkbox("No Recoil (Buggy)", &CFG.b_NoRecoil);
+			ImGui::Checkbox("No Recoil", &CFG.b_NoRecoil);
 
-			ImGui::Checkbox("No Spread (Buggy)", &CFG.b_NoSpread);
+			ImGui::Checkbox("No Spread", &CFG.b_NoSpread);
 
-			ImGui::Checkbox("Fast Reload (Buggy)", &CFG.b_FastReload);
+			ImGui::Checkbox("Fast Reload", &CFG.b_FastReload);
 
-			ImGui::Checkbox("Fast Scope (Buggy)", &CFG.b_FastScope);
+			ImGui::Checkbox("Fast Scope", &CFG.b_FastScope);
 		}
 		else if (CFG.tab_index == 3)
 		{
@@ -609,6 +880,23 @@ void Render()
 			}
 			if (ImGui::Button("Load Config")) {
 				LoadConfigFromFile("config.txt");
+			}
+		}
+		else if (CFG.tab_index == 4)
+		{
+			ImGui::Text("All the base code was made by Flags. <3");
+			ImGui::Text("Was updated & config (save/load) by Bunti.");
+			ImGui::Text("Now it's by TheGeogeo.");
+			ImGui::Text("");
+			ImGui::Text("This cheat is free if you paid it click below...");
+			if (ImGui::Button("HERE"))
+			{
+				ShellExecute(0, 0, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", 0, 0, SW_SHOW);
+				CFG.rick_rolled = true;
+			}
+			if (CFG.rick_rolled)
+			{
+				ImGui::Text("Don't be stupid next time and check first on any forum :)");
 			}
 		}
 		ImGui::PopFont();

@@ -99,6 +99,7 @@ void SaveConfigToFile(const char* filename) {
 	file << "b_EspHealth=" << CFG.b_EspHealth << "\n";
 	file << "b_EspShield=" << CFG.b_EspShield << "\n";
 	file << "b_EspTeam=" << CFG.b_EspTeam << "\n";
+	file << "b_EspItem=" << CFG.b_EspItem << "\n";
 	file << "b_EspName=" << CFG.b_EspName << "\n";
 	file << "b_Aimbot=" << CFG.b_Aimbot << "\n";
 	file << "b_AimbotFOV=" << CFG.b_AimbotFOV << "\n";
@@ -115,6 +116,7 @@ void SaveConfigToFile(const char* filename) {
 	// Write integer and float settings
 	file << "BoxType=" << CFG.BoxType << "\n";
 	file << "LineType=" << CFG.LineType << "\n";
+	file << "aimLocation=" << CFG.aimLocation << "\n";
 	file << "tab_index=" << CFG.tab_index << "\n";
 	file << "AimKey1=" << CFG.AimKey[0] << "\n";
 	file << "AimKey2=" << CFG.AimKey[1] << "\n";
@@ -169,6 +171,9 @@ void LoadConfigFromFile(const char* filename) {
 		else if (line.find("b_EspTeam=") != std::string::npos) {
 			CFG.b_EspTeam = std::stoi(line.substr(line.find("=") + 1));
 		}
+		else if (line.find("b_EspItem=") != std::string::npos) {
+			CFG.b_EspItem = std::stoi(line.substr(line.find("=") + 1));
+		}
 		else if (line.find("b_Aimbot=") != std::string::npos) {
 			CFG.b_Aimbot = std::stoi(line.substr(line.find("=") + 1));
 		}
@@ -215,6 +220,9 @@ void LoadConfigFromFile(const char* filename) {
 		}
 		else if (line.find("LineType=") != std::string::npos) {
 			CFG.LineType = std::stoi(line.substr(line.find("=") + 1));
+		}
+		else if (line.find("aimLocation=") != std::string::npos) {
+			CFG.aimLocation = std::stoi(line.substr(line.find("=") + 1));
 		}
 		else if (line.find("tab_index=") != std::string::npos) {
 			CFG.tab_index = std::stoi(line.substr(line.find("=") + 1));
@@ -461,4 +469,42 @@ Vector3 ProjectWorldToScreen(Vector3 WorldLocation)
 	//Screenlocation.z = ScreenCenterZ - vTransformed.z * (ScreenCenterX / tanf(FovAngle * (float)M_PI / 360.f)) / vTransformed.z;
 
 	return Screenlocation;
+}
+
+bool IsWeaponAR(int itemID)
+{
+	if (itemID == 1510201 || itemID == 1510207 || itemID == 1510208
+		|| itemID == 1510219 || itemID == 1510210 || itemID == 1510216
+		|| itemID == 1510222 || itemID == 1510223 || itemID == 1510201)
+		return true;
+	return false;
+}
+
+bool IsWeaponSMG(int itemID)
+{
+	if (itemID == 1510250 || itemID == 1510203 || itemID == 1510209
+		|| itemID == 1510211 || itemID == 1510218)
+		return true;
+	return false;
+}
+
+bool IsWeaponSNP(int itemID)
+{
+	if (itemID == 1510204 || itemID == 1510206 || itemID == 1510212)
+		return true;
+	return false;
+}
+
+bool IsWeaponSpecial(int itemID)
+{
+	if (itemID == 1511521 || itemID == 1511522)
+		return true;
+	return false;
+}
+
+bool IsWeaponSHG(int itemID)
+{
+	if (itemID == 1510205 || itemID == 1510214)
+		return true;
+	return false;
 }

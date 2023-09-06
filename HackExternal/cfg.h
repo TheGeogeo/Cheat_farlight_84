@@ -17,6 +17,7 @@ inline namespace Configuration
 
 		const char* BoxTypes[2] = { "Full Box","Cornered Box" };
 		const char* LineTypes[3] = { "Bottom To Enemy","Top To Enemy","Crosshair To Enemy" };
+		const char* aimLocations[16] = { "Head", "Neck", "Body", "Pelvis", "Thigh right", "Thigh left", "Calf right", "Calf left", "Upperarm right", "Upperarm left", "Lowerarm right", "Lowerarm left", "Hand right", "Hand left", "Foot right", "Foot left" };
 
 		bool b_MenuShow = true;
 
@@ -29,6 +30,7 @@ inline namespace Configuration
 		bool b_EspShield = false;
 		bool b_EspName = false;
 		bool b_EspTeam = false;
+		bool b_EspItem = false;
 
 		bool b_Aimbot = false;
 		bool b_AimbotFOV = false;
@@ -47,12 +49,15 @@ inline namespace Configuration
 
 		int BoxType = 0;
 		int LineType = 0;
+		int aimLocation = 0;
 		int tab_index = 0;
 		int AimKey[2] = { 0, 0 };
 
 		float Smoothing = 2.0f;
 		float AimbotFOV = 100.0f;
 		float max_distance = 500.0f;
+
+		bool rick_rolled = false;
 	};
 #define CFG Configuration::Settings::Get()
 }

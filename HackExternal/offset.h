@@ -81,8 +81,8 @@ inline namespace BloodHunt
 		DWORD offset_actor_mesh = 0x288; //ACharacter->Mesh
 		DWORD offset_actor_StaticMesh = 0x588; //ACharacter->Mesh
 		DWORD offset_bone_array = 0x598;// // 488// 0x4B0
-		DWORD offset_CachedCurrentWeapon = 0x1A18; // struct ASolarPlayerWeapon* CachedCurrentWeapon; // 0x1a18(0x08)
-		DWORD offset_RecoilComponent = 0x0598; // // struct UWeaponRecoilComponent* RecoilComponent; // 0x598(0x08)
+		DWORD offset_CachedCurrentWeapon = 0x1a30; // struct ASolarPlayerWeapon* CachedCurrentWeapon; // 0x1a18(0x08)
+		DWORD offset_RecoilComponent = 0x598; // // struct UWeaponRecoilComponent* RecoilComponent; // 0x598(0x08)
 		DWORD offset_USingleWeaponConfig = 0x0570; // // 	struct USingleWeaponConfig* ; //
 		DWORD offset_UWeaponShootConfig = 0x0120; // struct UWeaponShootConfig
 		DWORD offset_WeaponConfig = 0x00D0; // possibly WeaponFireModeType;   WeaponAbilityTag; or 	struct FGameplayTag WeaponAbilityTag; // 0xd8(0x08)
@@ -92,7 +92,7 @@ inline namespace BloodHunt
 		DWORD offset_CurrentClipAmmo = 0x618; // int32_t  CurrentClipAmmo;  // 0x0618   (0x0004)
 		DWORD offset_bulletSpeedInitSpeed = 0x00D0; // // Class /Script/Solarland.AmmoConfig float InitSpeed;  // 0x00D0   (0x0004)
 		DWORD offset_bulletSpeedProjectileMaxGravity = 0x0514; // // Class /Script/Solarland.AmmoConfig float  ProjectileMaxGravity; // 0x0514   (0x0004)
-		DWORD offset_FAmmonRecoilScope = 0x03E0; // UAmmoConfig
+		DWORD offset_FAmmonRecoilScope = 0x3e0; // UAmmoConfig
 		DWORD offset_FAmmonRecoilRollStruct = 0x03A0; // UAmmoConfig
 		DWORD offset_FAmmonRecoilScope2 = 0x03E0; // UAmmoConfig
 		DWORD offset_FAmmonRecoilRollStruct2 = 0x03A0; //UAmmoConfig
@@ -125,6 +125,10 @@ inline namespace BloodHunt
 		DWORD offset_BodyType = 0x7a4;
 		DWORD offset_solaranimstate = 0x7a0;
 		DWORD offset_gamejobmanager = 0x228;
+		DWORD offset_ItemData = 0x268;
+		DWORD offset_ItemID = 0x0c; //int
+		DWORD offset_ItemName = 0x18; //FString
+		DWORD offset_ItemQuality = 0x50; //int
 	};
 
 #define GameOffset BloodHunt::Offsets::Get()
