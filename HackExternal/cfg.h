@@ -15,6 +15,7 @@ inline namespace Configuration
 	{
 	public:
 
+		const char* cpuUsages[3] = { "High (better visual & aimbot)","Medium (ok visual & aimbot)","Low (worse visual & aimbot) buy CPU" };
 		const char* BoxTypes[2] = { "Full Box","Cornered Box" };
 		const char* LineTypes[3] = { "Bottom To Enemy","Top To Enemy","Crosshair To Enemy" };
 		const char* aimLocations[16] = { "Head", "Neck", "Body", "Pelvis", "Thigh right", "Thigh left", "Calf right", "Calf left", "Upperarm right", "Upperarm left", "Lowerarm right", "Lowerarm left", "Hand right", "Hand left", "Foot right", "Foot left" };
@@ -47,6 +48,7 @@ inline namespace Configuration
 		ImColor FovColor = ImColor(255.f / 255, 0.f, 0.f);
 		float fl_FovColor[3] = { 255.f / 255,0.f,0.f };  //
 
+		int cpuUsage = 0;
 		int BoxType = 0;
 		int LineType = 0;
 		int aimLocation = 0;

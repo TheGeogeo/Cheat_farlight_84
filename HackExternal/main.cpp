@@ -171,7 +171,6 @@ auto CallHacks() -> VOID
 			write<float>(USingleWeaponConfig + 0x0494, -100.0f);// ChargeTime
 			write<float>(USingleWeaponConfig + 0x0498, -100.0f);// ChargeTime
 		}
-		Sleep(1);
 	}
 }
 
@@ -407,7 +406,7 @@ auto CallAimbot() -> VOID
 				move_to(aimingLocationPos.x, aimingLocationPos.y);
 			}
 		}
-		Sleep(1);
+		GetCpuUsageAimbot();
 	}
 }
 auto GameCache() -> VOID
@@ -485,150 +484,147 @@ auto GameCache() -> VOID
 		entityList = tmpList;
 		itemEntityList = tmpItemList;
 	}
-	Sleep(10);
+	Sleep(40);
 }
 auto RenderVisual() -> VOID
 {
 	auto EntityList_Copy = entityList;
 	auto itemEntityList_Copy = itemEntityList;
 
-	for (int index = 0; index < itemEntityList_Copy.size(); ++index)
+	if (CFG.b_Visual)
 	{
-		auto Entity = itemEntityList_Copy[index];
-
-		auto local_pos = read<Vector3>(GameVars.local_player_root + GameOffset.offset_relative_location);
-		auto pawn_root = read<DWORD_PTR>(Entity.actor_pawn + GameOffset.offset_root_component);
-		auto pawn_location = read<Vector3>(pawn_root + GameOffset.offset_relative_location);
-		auto entity_distance = local_pos.Distance(pawn_location);
-
-		if (CFG.b_Visual && entity_distance < CFG.max_distance)
+		for (int index = 0; index < itemEntityList_Copy.size(); ++index)
 		{
-			if (CFG.b_EspItem)
+			auto Entity = itemEntityList_Copy[index];
+
+			auto local_pos = read<Vector3>(GameVars.local_player_root + GameOffset.offset_relative_location);
+			auto pawn_root = read<DWORD_PTR>(Entity.actor_pawn + GameOffset.offset_root_component);
+			auto pawn_location = read<Vector3>(pawn_root + GameOffset.offset_relative_location);
+			auto entity_distance = local_pos.Distance(pawn_location);
+
+			if (entity_distance < CFG.max_distance)
 			{
-				auto itemID = read<uint32_t>((uintptr_t)(Entity.actor_pawn) + GameOffset.offset_ItemData + GameOffset.offset_ItemID);
-				auto itemName = read<FString>((uintptr_t)(Entity.actor_pawn) + GameOffset.offset_ItemData + GameOffset.offset_ItemName);
-				auto itemQuality = read<uint32_t>((uintptr_t)(Entity.actor_pawn) + GameOffset.offset_ItemData + GameOffset.offset_ItemQuality);
-				string itemNameStr = itemName.ToString();
+				if (CFG.b_EspItem)
+				{
+					auto itemID = read<uint32_t>((uintptr_t)(Entity.actor_pawn) + GameOffset.offset_ItemData + GameOffset.offset_ItemID);
+					auto itemName = read<FString>((uintptr_t)(Entity.actor_pawn) + GameOffset.offset_ItemData + GameOffset.offset_ItemName);
+					auto itemQuality = read<uint32_t>((uintptr_t)(Entity.actor_pawn) + GameOffset.offset_ItemData + GameOffset.offset_ItemQuality);
+					string itemNameStr = itemName.ToString();
 
-				auto itemPosScreen = ProjectWorldToScreen(Vector3(pawn_location.x, pawn_location.y, pawn_location.z));
+					auto itemPosScreen = ProjectWorldToScreen(Vector3(pawn_location.x, pawn_location.y, pawn_location.z));
 
-				ImColor colorQuality = ImColor(255, 255, 255);
-				switch (itemQuality)
-				{
-				case 1:
-					colorQuality = ImColor(255, 255, 255);
-					break;
-				case 2:
-					colorQuality = ImColor(0, 168, 6);
-					break;
-				case 3:
-					colorQuality = ImColor(32, 41, 201);
-					break;
-				case 4:
-					colorQuality = ImColor(201, 0, 212);
-					break;
-				case 5:
-					colorQuality = ImColor(222, 122, 0);
-					break;
-				case 6:
-					colorQuality = ImColor(200, 0, 0);
-					break;
-				default:
-					break;
-				}
+					ImColor colorQuality = ImColor(255, 255, 255);
+					switch (itemQuality)
+					{
+					case 1:
+						colorQuality = ImColor(255, 255, 255);
+						break;
+					case 2:
+						colorQuality = ImColor(0, 168, 6);
+						break;
+					case 3:
+						colorQuality = ImColor(32, 41, 201);
+						break;
+					case 4:
+						colorQuality = ImColor(201, 0, 212);
+						break;
+					case 5:
+						colorQuality = ImColor(222, 122, 0);
+						break;
+					case 6:
+						colorQuality = ImColor(200, 0, 0);
+						break;
+					default:
+						break;
+					}
 
-				string strToDrawItem = "";
+					string strToDrawItem = "";
 
-				if (IsWeaponAR(itemID))
-				{
-					strToDrawItem += "[AR] " + itemNameStr;
-				}
-				else if (IsWeaponSMG(itemID))
-				{
-					strToDrawItem += "[SMG] " + itemNameStr;
-				}
-				else if (IsWeaponSNP(itemID))
-				{
-					strToDrawItem += "[SNP] " + itemNameStr;
-				}
-				else if (IsWeaponSpecial(itemID))
-				{
-					strToDrawItem += "[SP] " + itemNameStr;
-				}
-				else if (IsWeaponSHG(itemID))
-				{
-					strToDrawItem += "[SHG] " + itemNameStr;
-				}
-				else
-				{
-					strToDrawItem += itemNameStr;
-				}
+					if (IsWeaponAR(itemID))
+					{
+						strToDrawItem += "[AR] " + itemNameStr;
+					}
+					else if (IsWeaponSMG(itemID))
+					{
+						strToDrawItem += "[SMG] " + itemNameStr;
+					}
+					else if (IsWeaponSNP(itemID))
+					{
+						strToDrawItem += "[SNP] " + itemNameStr;
+					}
+					else if (IsWeaponSpecial(itemID))
+					{
+						strToDrawItem += "[SP] " + itemNameStr;
+					}
+					else if (IsWeaponSHG(itemID))
+					{
+						strToDrawItem += "[SHG] " + itemNameStr;
+					}
+					else
+					{
+						strToDrawItem += itemNameStr;
+					}
 
-				DrawOutlinedText(Verdana, strToDrawItem, ImVec2(itemPosScreen.x, itemPosScreen.y), 16.0f, colorQuality, true);
+					DrawOutlinedText(Verdana, strToDrawItem, ImVec2(itemPosScreen.x, itemPosScreen.y), 16.0f, colorQuality, true);
+				}
 			}
 		}
 	}
 
-	for (int index = 0; index < EntityList_Copy.size(); ++index)
+	if (CFG.b_Visual)
 	{
-		auto Entity = EntityList_Copy[index];
-
-		if (Entity.actor_pawn == GameVars.local_player_pawn)
-			continue;
-
-		if (!Entity.actor_mesh || !Entity.actor_state || !Entity.actor_pawn)
-			continue;
-
-		float Health = read<float>(Entity.actor_state + GameOffset.offset_Hp);
-		float MaxHealth = read<float>(Entity.actor_state + GameOffset.offset_HpMax);
-		if (MaxHealth == 0) {  // Guard against division by zero.
-			MaxHealth = 1.0f;
-		}
-		float shield = read<float>(Entity.actor_state + GameOffset.offset_ShieldInfo + GameOffset.offset_Shield);
-		float maxShield = 120.0f;
-		float procentageHp = Health * 100 / MaxHealth;
-		float procentageShield = shield * 100 / maxShield;
-
-		auto PlayerName = read<FString>(Entity.actor_state + GameOffset.offset_player_name);
-		auto BotAI = read<BYTE>(Entity.actor_state + GameOffset.offset_bot);
-		auto SolarTeamIfo = read<DWORD_PTR>(Entity.actor_state + GameOffset.offset_ASolarTeamInfotTeam);
-		auto TeamId = read<BYTE>(SolarTeamIfo + GameOffset.offset_ASolarTeamInfotTeamID);
-		auto MyTeamInfo = read<DWORD_PTR>(GameVars.local_player_state + GameOffset.offset_ASolarTeamInfotTeam);
-		auto MyTeamID = read<BYTE>(MyTeamInfo + GameOffset.offset_ASolarTeamInfotTeamID);
-
-		if (procentageHp == 0)
-			continue;
-
-		if (SolarTeamIfo == MyTeamInfo && !CFG.b_EspTeam)
-			continue;
-
-		auto local_pos = read<Vector3>(GameVars.local_player_root + GameOffset.offset_relative_location);
-		auto head_pos = GetBoneWithRotation(Entity.actor_mesh, bones::head);
-		auto bone_pos = GetBoneWithRotation(Entity.actor_mesh, 0);
-		auto BottomBox = ProjectWorldToScreen(bone_pos);
-		auto TopBox = ProjectWorldToScreen(Vector3(head_pos.x, head_pos.y, head_pos.z + 15));
-
-		if (BottomBox.y == TopBox.y) {  // Guard against undefined behavior.
-			BottomBox.y += 1.0f;
-		}
-
-		float CornerHeight = abs(TopBox.y - BottomBox.y);
-		float CornerWidth = CornerHeight * 0.65f;
-
-		float width = CornerWidth / 10;
-		if (width < 2.f) width = 2.f;
-		if (width > 3) width = 3.f;
-
-		auto entity_distance = local_pos.Distance(bone_pos);
-		if (CFG.b_Aimbot)
+		for (int index = 0; index < EntityList_Copy.size(); ++index)
 		{
-			if (CFG.b_AimbotFOV)
-			{
-				DrawCircle(GameVars.ScreenWidth / 2, GameVars.ScreenHeight / 2, CFG.AimbotFOV, CFG.FovColor, 0);
+			auto Entity = EntityList_Copy[index];
+
+			if (Entity.actor_pawn == GameVars.local_player_pawn)
+				continue;
+
+			if (!Entity.actor_mesh || !Entity.actor_state || !Entity.actor_pawn)
+				continue;
+
+			float Health = read<float>(Entity.actor_state + GameOffset.offset_Hp);
+			float MaxHealth = read<float>(Entity.actor_state + GameOffset.offset_HpMax);
+			if (MaxHealth == 0) {  // Guard against division by zero.
+				MaxHealth = 1.0f;
 			}
-		}
-		if (CFG.b_Visual)
-		{
+			float shield = read<float>(Entity.actor_state + GameOffset.offset_ShieldInfo + GameOffset.offset_Shield);
+			float maxShield = 120.0f;
+			float procentageHp = Health * 100 / MaxHealth;
+			float procentageShield = shield * 100 / maxShield;
+
+			auto PlayerName = read<FString>(Entity.actor_state + GameOffset.offset_player_name);
+			auto BotAI = read<BYTE>(Entity.actor_state + GameOffset.offset_bot);
+			auto SolarTeamIfo = read<DWORD_PTR>(Entity.actor_state + GameOffset.offset_ASolarTeamInfotTeam);
+			auto TeamId = read<BYTE>(SolarTeamIfo + GameOffset.offset_ASolarTeamInfotTeamID);
+			auto MyTeamInfo = read<DWORD_PTR>(GameVars.local_player_state + GameOffset.offset_ASolarTeamInfotTeam);
+			auto MyTeamID = read<BYTE>(MyTeamInfo + GameOffset.offset_ASolarTeamInfotTeamID);
+
+			if (procentageHp == 0)
+				continue;
+
+			if (SolarTeamIfo == MyTeamInfo && !CFG.b_EspTeam)
+				continue;
+
+			auto local_pos = read<Vector3>(GameVars.local_player_root + GameOffset.offset_relative_location);
+			auto head_pos = GetBoneWithRotation(Entity.actor_mesh, bones::head);
+			auto bone_pos = GetBoneWithRotation(Entity.actor_mesh, 0);
+			auto BottomBox = ProjectWorldToScreen(bone_pos);
+			auto TopBox = ProjectWorldToScreen(Vector3(head_pos.x, head_pos.y, head_pos.z + 15));
+
+			if (BottomBox.y == TopBox.y) {  // Guard against undefined behavior.
+				BottomBox.y += 1.0f;
+			}
+
+			float CornerHeight = abs(TopBox.y - BottomBox.y);
+			float CornerWidth = CornerHeight * 0.65f;
+
+			float width = CornerWidth / 10;
+			if (width < 2.f) width = 2.f;
+			if (width > 3) width = 3.f;
+
+			auto entity_distance = local_pos.Distance(bone_pos);
+
 			if (entity_distance < CFG.max_distance)
 			{
 				if (CFG.b_EspBox)
@@ -733,6 +729,16 @@ auto RenderVisual() -> VOID
 			}
 		}
 	}
+
+	if (CFG.b_Aimbot)
+	{
+		if (CFG.b_AimbotFOV)
+		{
+			DrawCircle(GameVars.ScreenWidth / 2, GameVars.ScreenHeight / 2, CFG.AimbotFOV, CFG.FovColor, 0);
+		}
+	}
+
+	GetCpuUsageVisual();
 }
 
 void InputHandler() {
@@ -872,6 +878,8 @@ void Render()
 			ImGui::Checkbox("Fast Reload", &CFG.b_FastReload);
 
 			ImGui::Checkbox("Fast Scope", &CFG.b_FastScope);
+
+			ImGui::Combo("CPU usage", &CFG.cpuUsage, CFG.cpuUsages, IM_ARRAYSIZE(CFG.cpuUsages));
 		}
 		else if (CFG.tab_index == 3)
 		{

@@ -114,6 +114,7 @@ void SaveConfigToFile(const char* filename) {
 	file << "FovColor=" << CFG.fl_FovColor[0] << "," << CFG.fl_FovColor[1] << "," << CFG.fl_FovColor[2] << "\n";
 
 	// Write integer and float settings
+	file << "cpuUsage=" << CFG.cpuUsage << "\n";
 	file << "BoxType=" << CFG.BoxType << "\n";
 	file << "LineType=" << CFG.LineType << "\n";
 	file << "aimLocation=" << CFG.aimLocation << "\n";
@@ -215,6 +216,9 @@ void LoadConfigFromFile(const char* filename) {
 			}
 		}
 		// Load integer and float settings
+		else if (line.find("cpuUsage=") != std::string::npos) {
+			CFG.cpuUsage = std::stoi(line.substr(line.find("=") + 1));
+		}
 		else if (line.find("BoxType=") != std::string::npos) {
 			CFG.BoxType = std::stoi(line.substr(line.find("=") + 1));
 		}
@@ -469,6 +473,34 @@ Vector3 ProjectWorldToScreen(Vector3 WorldLocation)
 	//Screenlocation.z = ScreenCenterZ - vTransformed.z * (ScreenCenterX / tanf(FovAngle * (float)M_PI / 360.f)) / vTransformed.z;
 
 	return Screenlocation;
+}
+
+void GetCpuUsageVisual()
+{
+	if (CFG.cpuUsage == 1)
+	{
+		Sleep(20);
+	}
+	else if (CFG.cpuUsage == 2)
+	{
+		Sleep(40);
+	}
+}
+
+void GetCpuUsageAimbot()
+{
+	if (CFG.cpuUsage == 0)
+	{
+		Sleep(1);
+	}
+	if (CFG.cpuUsage == 1)
+	{
+		Sleep(20);
+	}
+	else if (CFG.cpuUsage == 2)
+	{
+		Sleep(40);
+	}
 }
 
 bool IsWeaponAR(int itemID)
