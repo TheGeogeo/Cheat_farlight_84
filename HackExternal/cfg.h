@@ -42,6 +42,9 @@ inline namespace Configuration
 		bool b_FastReload = false;
 		bool b_FastScope = false;
 
+		bool b_fxHotkey = false;
+		bool b_numpadHotkey = false;
+
 		ImColor VisibleColor = ImColor(1.f / 255, 1.f, 1.f);
 		float fl_VisibleColor[3] = { 1.f,1.f / 255,1.f };  //
 
@@ -52,6 +55,7 @@ inline namespace Configuration
 		int BoxType = 0;
 		int LineType = 0;
 		int aimLocation = 0;
+		int selectedReload = 0; // 0 fast 1 instant
 		int tab_index = 0;
 		int AimKey[2] = { 0, 0 };
 

@@ -55,9 +55,9 @@ inline namespace BloodHunt
 	{
 	public:
 
-		DWORD offset_u_world = 0x67B5080;//.text:00007FF6523B2E02	sub_7FF6523B26B0	mov     rbx, cs : 7FF658411CE0h // 0x7026B0 or // 0x23B26B0 // 676 1CE0
-		DWORD offset_g_names = 0x6645580;//.text:00007FF6540BE386	sub_7FF6540BE2E0	db  48h; H		  7FF651CB0000 // 0x240E2E0 7FF6582A2240
-		DWORD offset_g_obj = 0x665DDF0;//.48 8B 05 ?? ?? ?? ?? 48 8B 14 C8 49 63 C0 48 8D 0C 40 48 39 34 CA .text:00007FF6525547D8	sub_7FF652554750	mov     rax, cs:7FF6582BAA90h
+		DWORD offset_u_world = 0x6807900;// 48 8B 1D ? ? ? ? 48 85 DB 74 ? 41 B0 01	sub_7FF6523B26B0	mov     rbx, cs : 7FF658411CE0h // 0x7026B0 or // 0x23B26B0 // 676 1CE0
+		DWORD offset_g_names = 0x6697E00;// 4C 8D 05 ? ? ? ? EB ? 48 8D 0D ? ? ? ? E8	sub_7FF6540BE2E0	db  48h; H		  7FF651CB0000 // 0x240E2E0 7FF6582A2240
+		DWORD offset_g_obj = 0x66B0680;// 48 8B 05 ? ? ? ? 48 8B 0C C8 4C 8D 04 D1 .text:00007FF6525547D8	sub_7FF652554750	mov     rax, cs:7FF6582BAA90h
 		//Camera
 		DWORD offset_camera_manager = 0x2d8; // APlayerController->PlayerCameraManager
 		DWORD offset_camera_cache = 0x1bf0; //APlayerCameraManager->CameraCachePrivate0x2230
@@ -99,8 +99,8 @@ inline namespace BloodHunt
 		DWORD offset_FAmmonRecoilScope3 = 0x03E0; //UAmmoConfig
 		DWORD offset_FAmmonRecoilRollStruct3 = 0x03A0; // UAmmoConfig
 		DWORD offset_WeaponTextType = 0x868; //FString  WeaponTextType;  // 0x0868   (0x0010)
-		DWORD offset_Hp = 0x580; // //ASolarPlayerState  float CurrentHealth; // 0x580(0x04)
-		DWORD offset_HpMax = 0x584; // ASolarPlayerState float MaxHealth; // 0x584(0x04)
+		DWORD offset_Hp = 0x588; // //ASolarPlayerState  float CurrentHealth; // 0x580(0x04)
+		DWORD offset_HpMax = 0x58c; // ASolarPlayerState float MaxHealth; // 0x584(0x04)
 		DWORD offset_ShieldInfo = 0x588; // APlayerState char bIsABot : 1; // 0x232(0x01)
 		DWORD offset_ShieldLevel = 0x0; // APlayerState char bIsABot : 1; // 0x232(0x01) + offset_ShieldInfo
 		DWORD offset_Shield = 0x4; // APlayerState char bIsABot : 1; // 0x232(0x01) + offset_ShieldInfo

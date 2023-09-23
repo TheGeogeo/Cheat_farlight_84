@@ -164,7 +164,14 @@ auto CallHacks() -> VOID
 		}
 		if (CFG.b_FastReload)
 		{
-			write<float>(primaryammo + 0x0118, 1.650f);// ChargeTime
+			if (CFG.selectedReload == 0)
+			{
+				write<float>(primaryammo + 0x0118, 1.650f);// ChargeTime
+			}
+			else if (CFG.selectedReload == 1)
+			{
+				write<float>(primaryammo + 0x0118, 0.1f);// ChargeTime
+			}
 		}
 		if (CFG.b_FastScope)
 		{
@@ -876,6 +883,11 @@ void Render()
 			ImGui::Checkbox("No Spread", &CFG.b_NoSpread);
 
 			ImGui::Checkbox("Fast Reload", &CFG.b_FastReload);
+			if (CFG.b_FastReload)
+			{
+				ImGui::RadioButton("Fast Reload (legit)", &CFG.selectedReload, 0);
+				ImGui::RadioButton("Instant Reload (server denied if you shoot directly)", &CFG.selectedReload, 1);
+			}
 
 			ImGui::Checkbox("Fast Scope", &CFG.b_FastScope);
 
@@ -889,11 +901,19 @@ void Render()
 			if (ImGui::Button("Load Config")) {
 				LoadConfigFromFile("config.txt");
 			}
+
+			ImGui::Checkbox("Allow Fx Hotkey", &CFG.b_fxHotkey);
+			ImGui::Checkbox("Allow NUMPAD Hotkey", &CFG.b_numpadHotkey);
+			ImGui::Text("F1/NUMPAD1: ");
+			ImGui::Text("F2/NUMPAD2: ");
+			ImGui::Text("F3/NUMPAD3: ");
+			ImGui::Text("F4/NUMPAD4: ");
+			ImGui::Text("F5/NUMPAD5: ");
 		}
 		else if (CFG.tab_index == 4)
 		{
-			ImGui::Text("All the base code was made by Flags. <3");
-			ImGui::Text("Was updated & config (save/load) by Bunti.");
+			ImGui::Text("All the base code was made by Flags.");
+			ImGui::Text("Was updated by Bunti.");
 			ImGui::Text("Now it's by TheGeogeo.");
 			ImGui::Text("");
 			ImGui::Text("This cheat is free if you paid it click below...");

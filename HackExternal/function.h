@@ -109,6 +109,10 @@ void SaveConfigToFile(const char* filename) {
 	file << "b_FastReload=" << CFG.b_FastReload << "\n";
 	file << "b_FastScope=" << CFG.b_FastScope << "\n";
 
+	//config
+	file << "b_fxHotkey=" << CFG.b_fxHotkey << "\n";
+	file << "b_numpadHotkey=" << CFG.b_numpadHotkey << "\n";
+
 	// Write color settings
 	file << "VisibleColor=" << CFG.fl_VisibleColor[0] << "," << CFG.fl_VisibleColor[1] << "," << CFG.fl_VisibleColor[2] << "\n";
 	file << "FovColor=" << CFG.fl_FovColor[0] << "," << CFG.fl_FovColor[1] << "," << CFG.fl_FovColor[2] << "\n";
@@ -118,6 +122,7 @@ void SaveConfigToFile(const char* filename) {
 	file << "BoxType=" << CFG.BoxType << "\n";
 	file << "LineType=" << CFG.LineType << "\n";
 	file << "aimLocation=" << CFG.aimLocation << "\n";
+	file << "selectedReload=" << CFG.selectedReload << "\n";
 	file << "tab_index=" << CFG.tab_index << "\n";
 	file << "AimKey1=" << CFG.AimKey[0] << "\n";
 	file << "AimKey2=" << CFG.AimKey[1] << "\n";
@@ -196,6 +201,13 @@ void LoadConfigFromFile(const char* filename) {
 		else if (line.find("b_FastScope=") != std::string::npos) {
 			CFG.b_FastScope = std::stoi(line.substr(line.find("=") + 1));
 		}
+		// config
+		else if (line.find("b_fxHotkey=") != std::string::npos) {
+			CFG.b_fxHotkey = std::stoi(line.substr(line.find("=") + 1));
+		}
+		else if (line.find("b_numpadHotkey=") != std::string::npos) {
+			CFG.b_numpadHotkey = std::stoi(line.substr(line.find("=") + 1));
+		}
 		// Load color settings
 		else if (line.find("VisibleColor=") != std::string::npos) {
 			std::string colors = line.substr(line.find("=") + 1);
@@ -227,6 +239,9 @@ void LoadConfigFromFile(const char* filename) {
 		}
 		else if (line.find("aimLocation=") != std::string::npos) {
 			CFG.aimLocation = std::stoi(line.substr(line.find("=") + 1));
+		}
+		else if (line.find("selectedReload=") != std::string::npos) {
+			CFG.selectedReload = std::stoi(line.substr(line.find("=") + 1));
 		}
 		else if (line.find("tab_index=") != std::string::npos) {
 			CFG.tab_index = std::stoi(line.substr(line.find("=") + 1));
