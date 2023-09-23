@@ -596,7 +596,7 @@ auto RenderVisual() -> VOID
 				MaxHealth = 1.0f;
 			}
 			float shield = read<float>(Entity.actor_state + GameOffset.offset_ShieldInfo + GameOffset.offset_Shield);
-			float maxShield = 120.0f;
+			float maxShield = 180.0f;
 			float procentageHp = Health * 100 / MaxHealth;
 			float procentageShield = shield * 100 / maxShield;
 
@@ -668,7 +668,8 @@ auto RenderVisual() -> VOID
 				}
 				if (CFG.b_EspName)
 				{
-					if (BotAI == 2) {
+					if (BotAI == 128)
+					{
 						DrawOutlinedText(Verdana, "BOT", ImVec2(TopBox.x, TopBox.y - 20), 16.0f, ImColor(255, 255, 255), true);
 					}
 					else

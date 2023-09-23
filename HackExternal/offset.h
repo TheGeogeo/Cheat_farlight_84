@@ -110,7 +110,7 @@ inline namespace BloodHunt
 		DWORD offset_ASolarTeamInfotTeam = 0x0A88; // APlayerState char bIsABot : 1; // 0x232(0x01)
 		DWORD offset_ASolarTeamInfotTeamID = 0x0240; // APlayerState char bIsABot : 1; // 0x232(0x01)
 		DWORD offset_KillNum = 0x728; // APlayerState char bIsABot : 1; // 0x232(0x01)
-		DWORD offset_bot = 0x0ABA;
+		DWORD offset_bot = 0x232;
 		DWORD offset_Level = 0x458;
 		DWORD offset_Spects = 0x310; // APlayerState 	PlayerNamePrivate 	0x300 	FString
 		DWORD offset_Ping = 0x0; // AServerStatReplicator -> NumRelevantDeletedActors
