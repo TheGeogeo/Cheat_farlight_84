@@ -19,6 +19,7 @@ inline namespace Configuration
 		const char* BoxTypes[2] = { "Full Box","Cornered Box" };
 		const char* LineTypes[3] = { "Bottom To Enemy","Top To Enemy","Crosshair To Enemy" };
 		const char* aimLocations[16] = { "Head", "Neck", "Body", "Pelvis", "Thigh right", "Thigh left", "Calf right", "Calf left", "Upperarm right", "Upperarm left", "Lowerarm right", "Lowerarm left", "Hand right", "Hand left", "Foot right", "Foot left" };
+		const int shieldId[6] = { 0, 1010212, 1010313, 1010414, 1010515, 1010616 };
 
 		bool b_MenuShow = true;
 

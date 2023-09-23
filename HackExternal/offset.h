@@ -101,9 +101,9 @@ inline namespace BloodHunt
 		DWORD offset_WeaponTextType = 0x868; //FString  WeaponTextType;  // 0x0868   (0x0010)
 		DWORD offset_Hp = 0x588; // //ASolarPlayerState  float CurrentHealth; // 0x580(0x04)
 		DWORD offset_HpMax = 0x58c; // ASolarPlayerState float MaxHealth; // 0x584(0x04)
-		DWORD offset_ShieldInfo = 0x590; // APlayerState char bIsABot : 1; // 0x232(0x01)
-		DWORD offset_ShieldLevel = 0x0; // APlayerState char bIsABot : 1; // 0x232(0x01) + offset_ShieldInfo
-		DWORD offset_Shield = 0x4; // APlayerState char bIsABot : 1; // 0x232(0x01) + offset_ShieldInfo
+		DWORD offset_ShieldInfo = 0x590;
+		DWORD offset_ShieldLevel = 0x0; // offset_ShieldInfo + 0x
+		DWORD offset_Shield = 0x4; // offset_ShieldInfo + 0x
 		DWORD offset_ShieldMax = 0x10f4; // APlayerState char bIsABot : 1; // 0x232(0x01)
 		DWORD offset_player_name = 0x310; // APlayerState 	PlayerNamePrivate 	0x300 	FString
 		DWORD offset_ESCMPlayerTypeisBOT = 0x0ABA; // APlayerState char bIsABot : 1; // 0x232(0x01)

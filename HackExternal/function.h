@@ -518,6 +518,37 @@ void GetCpuUsageAimbot()
 	}
 }
 
+int GetIndexByShieldId(int id)
+{
+	for (int i = 0; i < (sizeof(CFG.shieldId) / sizeof(CFG.shieldId[0])); i++)
+	{
+		if (CFG.shieldId[i] == id) return i;
+	}
+	return 0;
+}
+
+float GetMaxShieldByIndexArray(int id)
+{
+	switch (id)
+	{
+	case 0:
+		return 1.0f;
+	case 1:
+		return 40.0f;
+	case 2:
+		return 60.0f;
+	case 3:
+		return 80.0f;
+	case 4:
+		return 100.0f;
+	case 5:
+		return 120.0f;
+	default:
+		break;
+	}
+	return 1.0f;
+}
+
 bool IsWeaponAR(int itemID)
 {
 	if (itemID == 1510201 || itemID == 1510207 || itemID == 1510208

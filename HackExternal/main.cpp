@@ -585,7 +585,9 @@ auto RenderVisual() -> VOID
 			auto Entity = EntityList_Copy[index];
 
 			if (Entity.actor_pawn == GameVars.local_player_pawn)
+			{
 				continue;
+			}
 
 			if (!Entity.actor_mesh || !Entity.actor_state || !Entity.actor_pawn)
 				continue;
@@ -595,9 +597,12 @@ auto RenderVisual() -> VOID
 			if (MaxHealth == 0) {  // Guard against division by zero.
 				MaxHealth = 1.0f;
 			}
-			float shield = read<float>(Entity.actor_state + GameOffset.offset_ShieldInfo + GameOffset.offset_Shield);
-			float maxShield = 120.0f;
 			float procentageHp = Health * 100 / MaxHealth;
+
+			int shieldId = read<int>(Entity.actor_state + GameOffset.offset_ShieldInfo + GameOffset.offset_ShieldLevel);
+			int simplyShieldId = GetIndexByShieldId(shieldId);
+			float shield = read<float>(Entity.actor_state + GameOffset.offset_ShieldInfo + GameOffset.offset_Shield);
+			float maxShield = GetMaxShieldByIndexArray(simplyShieldId);
 			float procentageShield = shield * 100 / maxShield;
 
 			auto PlayerName = read<FString>(Entity.actor_state + GameOffset.offset_player_name);
@@ -684,6 +689,7 @@ auto RenderVisual() -> VOID
 				if (CFG.b_EspShield)
 				{
 					ShieldBar(TopBox.x - (CornerWidth / 2) - 12, TopBox.y, width, BottomBox.y - TopBox.y, procentageShield, true);
+					DrawOutlinedText(Verdana, "Shield lvl " + to_string(simplyShieldId), ImVec2(TopBox.x - (CornerWidth / 2) - 55, TopBox.y + 5), 14.0f, ImColor(255, 255, 255), true);
 				}
 				if (CFG.b_EspSkeleton)
 				{
