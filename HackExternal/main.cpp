@@ -596,7 +596,7 @@ auto RenderVisual() -> VOID
 				MaxHealth = 1.0f;
 			}
 			float shield = read<float>(Entity.actor_state + GameOffset.offset_ShieldInfo + GameOffset.offset_Shield);
-			float maxShield = 180.0f;
+			float maxShield = 120.0f;
 			float procentageHp = Health * 100 / MaxHealth;
 			float procentageShield = shield * 100 / maxShield;
 
