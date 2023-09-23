@@ -45,6 +45,11 @@ inline namespace Configuration
 		bool b_fxHotkey = false;
 		bool b_numpadHotkey = false;
 
+		//not saved
+		bool b_masterEspHotkey = false;
+		bool b_masterAimbotHotkey = false;
+		bool b_masterMiscHotkey = false;
+
 		ImColor VisibleColor = ImColor(1.f / 255, 1.f, 1.f);
 		float fl_VisibleColor[3] = { 1.f,1.f / 255,1.f };  //
 

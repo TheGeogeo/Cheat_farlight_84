@@ -759,6 +759,51 @@ void Render()
 	if (GetAsyncKeyState(VK_INSERT) & 1)
 		CFG.b_MenuShow = !CFG.b_MenuShow;
 
+	if ((CFG.b_fxHotkey && (GetAsyncKeyState(VK_F1) & 1)) || (CFG.b_numpadHotkey && (GetAsyncKeyState(VK_NUMPAD1) & 1)))
+	{
+		CFG.b_masterEspHotkey = !CFG.b_masterEspHotkey;
+		if (CFG.b_masterEspHotkey)
+		{
+			CFG.b_Visual = false;
+		}
+		else
+		{
+			CFG.b_Visual = true;
+		}
+	}
+
+	if ((CFG.b_fxHotkey && (GetAsyncKeyState(VK_F2) & 1)) || (CFG.b_numpadHotkey && (GetAsyncKeyState(VK_NUMPAD2) & 1))) {
+		CFG.b_masterAimbotHotkey = !CFG.b_masterAimbotHotkey;
+		if (CFG.b_masterAimbotHotkey)
+		{
+			CFG.b_Aimbot = false;
+			CFG.b_AimbotFOV = false;
+		}
+		else
+		{
+			CFG.b_Aimbot = true;
+			CFG.b_AimbotFOV = true;
+		}
+	}
+
+	if ((CFG.b_fxHotkey && (GetAsyncKeyState(VK_F3) & 1)) || (CFG.b_numpadHotkey && (GetAsyncKeyState(VK_NUMPAD3) & 1))) {
+		CFG.b_masterMiscHotkey = !CFG.b_masterMiscHotkey;
+		if (CFG.b_masterMiscHotkey)
+		{
+			CFG.b_NoRecoil = false;
+			CFG.b_NoSpread = false;
+			CFG.b_FastReload = false;
+			CFG.b_FastScope = false;
+		}
+		else
+		{
+			CFG.b_NoRecoil = true;
+			CFG.b_NoSpread = true;
+			CFG.b_FastReload = true;
+			CFG.b_FastScope = true;
+		}
+	}
+
 	ImGui_ImplDX9_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -895,20 +940,19 @@ void Render()
 		}
 		else if (CFG.tab_index == 3)
 		{
+			ImGui::Checkbox("Allow Fx Hotkey", &CFG.b_fxHotkey);
+			ImGui::Checkbox("Allow NUMPAD Hotkey", &CFG.b_numpadHotkey);
+			ImGui::Text("F1/NUMPAD1: ESP");
+			ImGui::Text("F2/NUMPAD2: Aimbot");
+			ImGui::Text("F3/NUMPAD3: Misc");
+			ImGui::Text("");
+
 			if (ImGui::Button("Save Config")) {
 				SaveConfigToFile("config.txt");
 			}
 			if (ImGui::Button("Load Config")) {
 				LoadConfigFromFile("config.txt");
 			}
-
-			ImGui::Checkbox("Allow Fx Hotkey", &CFG.b_fxHotkey);
-			ImGui::Checkbox("Allow NUMPAD Hotkey", &CFG.b_numpadHotkey);
-			ImGui::Text("F1/NUMPAD1: ");
-			ImGui::Text("F2/NUMPAD2: ");
-			ImGui::Text("F3/NUMPAD3: ");
-			ImGui::Text("F4/NUMPAD4: ");
-			ImGui::Text("F5/NUMPAD5: ");
 		}
 		else if (CFG.tab_index == 4)
 		{
