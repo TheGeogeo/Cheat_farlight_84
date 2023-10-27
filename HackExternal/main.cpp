@@ -431,33 +431,19 @@ auto GameCache() -> VOID
 		GameVars.local_player_pawn = read<DWORD_PTR>(GameVars.local_player_controller + GameOffset.offset_apawn);
 		GameVars.local_player_root = read<DWORD_PTR>(GameVars.local_player_pawn + GameOffset.offset_root_component);
 		GameVars.local_player_state = read<DWORD_PTR>(GameVars.local_player_pawn + GameOffset.offset_player_state);
-		GameVars.ranged_weapon_component = read<DWORD_PTR>(GameVars.local_player_pawn + GameOffset.offset_ranged_weapon_component);
-		GameVars.equipped_weapon_type = read<DWORD_PTR>(GameVars.ranged_weapon_component + GameOffset.offset_equipped_weapon_type);
 		GameVars.persistent_level = read<DWORD_PTR>(GameVars.u_world + GameOffset.offset_persistent_level);
 		GameVars.actors = read<DWORD_PTR>(GameVars.persistent_level + GameOffset.offset_actor_array);
 		GameVars.actor_count = read<int>(GameVars.persistent_level + GameOffset.offset_actor_count);
-		/*
-		PrintPtr("uworld ", GameVars.u_world);
-		PrintPtr("game instance ", GameVars.game_instance);
-		PrintPtr("L Player Array ", GameVars.local_player_array);
-		PrintPtr("L Player ", GameVars.local_player);
-		PrintPtr("L Player Controller ", GameVars.local_player_controller);
-		PrintPtr("L Player Pawn ", GameVars.local_player_pawn);
-		PrintPtr("L Player Root ", GameVars.local_player_root);
-		PrintPtr("L Player State ", GameVars.local_player_state);
-		PrintPtr("P Level ", GameVars.persistent_level);
-		PrintPtr("Actors ", GameVars.actors);
-		PrintPtr("Actor Count ", GameVars.actor_count);
-		*/
+
 		for (int index = 0; index < GameVars.actor_count; ++index)
 		{
-			auto actor_pawn = read<uintptr_t>(GameVars.actors + index * 0x8);
+			uintptr_t actor_pawn = read<uintptr_t>(GameVars.actors + index * 0x8);
 			if (actor_pawn == 0x00)
 				continue;
 
-			auto actor_id = read<int>(actor_pawn + GameOffset.offset_actor_id);
-			auto actor_mesh = read<uintptr_t>(actor_pawn + GameOffset.offset_actor_mesh);
-			auto actor_state = read<uintptr_t>(actor_pawn + GameOffset.offset_player_state);
+			int actor_id = read<int>(actor_pawn + GameOffset.offset_actor_id);
+			uintptr_t actor_mesh = read<uintptr_t>(actor_pawn + GameOffset.offset_actor_mesh);
+			uintptr_t actor_state = read<uintptr_t>(actor_pawn + GameOffset.offset_player_state);
 			string name = GetNameFromFName(actor_id);
 
 			//printf("\n: %s", name.c_str());
@@ -502,12 +488,12 @@ auto RenderVisual() -> VOID
 	{
 		for (int index = 0; index < itemEntityList_Copy.size(); ++index)
 		{
-			auto Entity = itemEntityList_Copy[index];
+			EntityList Entity = itemEntityList_Copy[index];
 
-			auto local_pos = read<Vector3>(GameVars.local_player_root + GameOffset.offset_relative_location);
-			auto pawn_root = read<DWORD_PTR>(Entity.actor_pawn + GameOffset.offset_root_component);
-			auto pawn_location = read<Vector3>(pawn_root + GameOffset.offset_relative_location);
-			auto entity_distance = local_pos.Distance(pawn_location);
+			Vector3 local_pos = read<Vector3>(GameVars.local_player_root + GameOffset.offset_relative_location);
+			DWORD_PTR pawn_root = read<DWORD_PTR>(Entity.actor_pawn + GameOffset.offset_root_component);
+			Vector3 pawn_location = read<Vector3>(pawn_root + GameOffset.offset_relative_location);
+			float entity_distance = local_pos.Distance(pawn_location);
 
 			if (entity_distance < CFG.max_distance)
 			{
@@ -605,12 +591,12 @@ auto RenderVisual() -> VOID
 			float maxShield = GetMaxShieldByIndexArray(simplyShieldId);
 			float procentageShield = shield * 100 / maxShield;
 
-			auto PlayerName = read<FString>(Entity.actor_state + GameOffset.offset_player_name);
-			auto BotAI = read<BYTE>(Entity.actor_state + GameOffset.offset_bot);
-			auto SolarTeamIfo = read<DWORD_PTR>(Entity.actor_state + GameOffset.offset_ASolarTeamInfotTeam);
-			auto TeamId = read<BYTE>(SolarTeamIfo + GameOffset.offset_ASolarTeamInfotTeamID);
-			auto MyTeamInfo = read<DWORD_PTR>(GameVars.local_player_state + GameOffset.offset_ASolarTeamInfotTeam);
-			auto MyTeamID = read<BYTE>(MyTeamInfo + GameOffset.offset_ASolarTeamInfotTeamID);
+			FString PlayerName = read<FString>(Entity.actor_state + GameOffset.offset_player_name);
+			BYTE BotAI = read<BYTE>(Entity.actor_state + GameOffset.offset_bot);
+			DWORD_PTR SolarTeamIfo = read<DWORD_PTR>(Entity.actor_state + GameOffset.offset_ASolarTeamInfotTeam);
+			BYTE TeamId = read<BYTE>(SolarTeamIfo + GameOffset.offset_ASolarTeamInfotTeamID);
+			DWORD_PTR MyTeamInfo = read<DWORD_PTR>(GameVars.local_player_state + GameOffset.offset_ASolarTeamInfotTeam);
+			BYTE MyTeamID = read<BYTE>(MyTeamInfo + GameOffset.offset_ASolarTeamInfotTeamID);
 
 			if (procentageHp == 0)
 				continue;
@@ -618,11 +604,11 @@ auto RenderVisual() -> VOID
 			if (SolarTeamIfo == MyTeamInfo && !CFG.b_EspTeam)
 				continue;
 
-			auto local_pos = read<Vector3>(GameVars.local_player_root + GameOffset.offset_relative_location);
-			auto head_pos = GetBoneWithRotation(Entity.actor_mesh, bones::head);
-			auto bone_pos = GetBoneWithRotation(Entity.actor_mesh, 0);
-			auto BottomBox = ProjectWorldToScreen(bone_pos);
-			auto TopBox = ProjectWorldToScreen(Vector3(head_pos.x, head_pos.y, head_pos.z + 15));
+			Vector3 local_pos = read<Vector3>(GameVars.local_player_root + GameOffset.offset_relative_location);
+			Vector3 head_pos = GetBoneWithRotation(Entity.actor_mesh, bones::head);
+			Vector3 bone_pos = GetBoneWithRotation(Entity.actor_mesh, 0);
+			Vector3 BottomBox = ProjectWorldToScreen(bone_pos);
+			Vector3 TopBox = ProjectWorldToScreen(Vector3(head_pos.x, head_pos.y, head_pos.z + 15));
 
 			if (BottomBox.y == TopBox.y) {  // Guard against undefined behavior.
 				BottomBox.y += 1.0f;
