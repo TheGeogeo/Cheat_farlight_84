@@ -446,8 +446,6 @@ auto GameCache() -> VOID
 			uintptr_t actor_state = read<uintptr_t>(actor_pawn + GameOffset.offset_player_state);
 			string name = GetNameFromFName(actor_id);
 
-			//printf("\n: %s", name.c_str());
-
 			if (name.find("SolarItemActor") != std::string::npos || name.find("SolarGroundPreviewActor") != std::string::npos)
 			{
 				if (actor_pawn != NULL || actor_id != NULL || actor_state != NULL || actor_mesh != NULL)

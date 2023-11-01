@@ -53,9 +53,9 @@ inline namespace BloodHunt
 	{
 	public:
 
-		DWORD offset_u_world = 0x7033498;// 48 8B 1D ? ? ? ? 48 85 DB 74 ? 41 B0 01	sub_7FF6523B26B0	mov     rbx, cs : 7FF658411CE0h // 0x7026B0 or // 0x23B26B0 // 676 1CE0
+		DWORD offset_u_world = 0x7033488;// 48 8B 1D ? ? ? ? 48 85 DB 74 ? 41 B0 01	sub_7FF6523B26B0	mov     rbx, cs : 7FF658411CE0h // 0x7026B0 or // 0x23B26B0 // 676 1CE0
 		DWORD offset_g_names = 0x6EBB780;// 4C 8D 05 ? ? ? ? EB ? 48 8D 0D ? ? ? ? E8	sub_7FF6540BE2E0	db  48h; H		  7FF651CB0000 // 0x240E2E0 7FF6582A2240
-		DWORD offset_g_obj = 0x6ED40F0;// 48 8B 05 ? ? ? ? 48 8B 0C C8 4C 8D 04 D1 .text:00007FF6525547D8	sub_7FF652554750	mov     rax, cs:7FF6582BAA90h
+		DWORD offset_g_obj = 0x6ED40E0;// 48 8B 05 ? ? ? ? 48 8B 0C C8 4C 8D 04 D1 .text:00007FF6525547D8	sub_7FF652554750	mov     rax, cs:7FF6582BAA90h
 		//Camera
 		DWORD offset_camera_manager = 0x2d8; // APlayerController->PlayerCameraManager
 		DWORD offset_camera_cache = 0x1c70; //APlayerCameraManager->CameraCachePrivate0x2230
@@ -66,7 +66,7 @@ inline namespace BloodHunt
 		//Engine
 		DWORD offset_persistent_level = 0x30; //UWorld->PersistentLevel
 		DWORD offset_game_instance = 0x220; //UWolrd->OwningGameInstance
-		DWORD offset_Uscenecomponent = 0x230; //UWolrd->OwningGameInstance
+		DWORD offset_Uscenecomponent = 0x230;
 		DWORD offset_local_players_array = 0x38; //UGameInstance->LocalPlayers
 		DWORD offset_player_controller = 0x30; //UPlayer->PlayerController
 		DWORD offset_apawn = 0x2c0;  //APlayerController->AcknowledgedPawn
@@ -77,7 +77,7 @@ inline namespace BloodHunt
 		DWORD offset_actor_id = 0x18;
 		DWORD offset_player_state = 0x248; //apawjn->PlayerState
 		DWORD offset_actor_mesh = 0x288; //ACharacter->Mesh
-		DWORD offset_bone_array = 0x578;// Class: SkeletalMeshComponent ???? ; Transform[] CachedBoneSpaceTransforms ???? : struct USkinnedMeshComponent : UMeshComponent { struct USkeletalMesh* SkeletalMesh ???
+		DWORD offset_bone_array = 0x588;// Class: SkeletalMeshComponent ???? ; Transform[] CachedBoneSpaceTransforms ???? : struct USkinnedMeshComponent : UMeshComponent { struct USkeletalMesh* SkeletalMesh ???
 		DWORD offset_CachedCurrentWeapon = 0x1c28; // struct ASolarPlayerWeapon* CachedCurrentWeapon; // 0x1a18(0x08)
 		DWORD offset_RecoilComponent = 0xd40; // // struct UWeaponRecoilComponent* RecoilComponent; // 0x598(0x08)
 		DWORD offset_USingleWeaponConfig = 0x500; // // 	struct USingleWeaponConfig* ; //
